@@ -31,16 +31,12 @@ def init_db():
 
 
 def seed_demo_data():
-    """Insert realistic spills + vessels so the dashboard has rich data out of the box."""
+    """Insert realistic open-ocean spills + vessels in the middle of the high-seas corridor."""
     from . import models
 
     db = SessionLocal()
     try:
-        # Check if already seeded with new data
-        if db.query(models.Spill).count() >= 3:
-            return
-
-        # If old data exists, clear and re-seed
+        # Clear and re-seed with middle-of-ocean coordinates
         db.query(models.Alert).delete()
         db.query(models.Vessel).delete()
         db.query(models.Spill).delete()
@@ -54,13 +50,13 @@ def seed_demo_data():
                 vessel_type="Tanker",
                 flag="IN",
                 dark=True,
-                lat=19.06,
-                lon=72.88,
+                lat=15.46,
+                lon=65.90,
                 speed_knots=2.1,
-                course_deg=210,
+                course_deg=135,
                 track_geojson=[
-                    [19.28, 72.60], [19.24, 72.66], [19.19, 72.71], [19.15, 72.75],
-                    [19.11, 72.79], [19.08, 72.83], [19.06, 72.88]
+                  [15.82, 65.35], [15.75, 65.48], [15.68, 65.60], [15.60, 65.72],
+                  [15.52, 65.82], [15.48, 65.86], [15.46, 65.90],
                 ],
                 gap_at=4,
                 last_seen=now - timedelta(minutes=12),
@@ -71,13 +67,13 @@ def seed_demo_data():
                 vessel_type="Tanker",
                 flag="LR",
                 dark=False,
-                lat=19.14,
-                lon=73.20,
+                lat=15.60,
+                lon=66.80,
                 speed_knots=11.4,
                 course_deg=95,
                 track_geojson=[
-                    [19.20, 72.30], [19.19, 72.45], [19.18, 72.60], [19.17, 72.75],
-                    [19.16, 72.90], [19.15, 73.05], [19.14, 73.20]
+                  [15.72, 64.80], [15.70, 65.20], [15.68, 65.60], [15.65, 66.00],
+                  [15.63, 66.30], [15.61, 66.60], [15.60, 66.80],
                 ],
                 gap_at=None,
                 last_seen=now - timedelta(minutes=3),
@@ -88,13 +84,13 @@ def seed_demo_data():
                 vessel_type="Cargo",
                 flag="PA",
                 dark=False,
-                lat=19.10,
-                lon=72.20,
+                lat=15.50,
+                lon=64.40,
                 speed_knots=12.8,
-                course_deg=270,
+                course_deg=265,
                 track_geojson=[
-                    [19.05, 72.95], [19.06, 72.80], [19.07, 72.65], [19.08, 72.50],
-                    [19.09, 72.35], [19.10, 72.20]
+                  [15.35, 66.60], [15.38, 66.20], [15.42, 65.75], [15.45, 65.30],
+                  [15.48, 64.85], [15.50, 64.40],
                 ],
                 gap_at=None,
                 last_seen=now - timedelta(minutes=6),
@@ -105,13 +101,13 @@ def seed_demo_data():
                 vessel_type="Fishing",
                 flag="IN",
                 dark=False,
-                lat=19.20,
-                lon=72.75,
+                lat=15.80,
+                lon=65.40,
                 speed_knots=4.2,
                 course_deg=180,
                 track_geojson=[
-                    [19.40, 72.70], [19.36, 72.71], [19.32, 72.72], [19.28, 72.73],
-                    [19.24, 72.74], [19.20, 72.75]
+                  [16.25, 65.38], [16.12, 65.39], [16.00, 65.39], [15.90, 65.40],
+                  [15.80, 65.40],
                 ],
                 gap_at=None,
                 last_seen=now - timedelta(minutes=18),
@@ -122,13 +118,13 @@ def seed_demo_data():
                 vessel_type="Tanker",
                 flag="MH",
                 dark=False,
-                lat=19.00,
-                lon=73.20,
+                lat=15.00,
+                lon=66.60,
                 speed_knots=13.1,
                 course_deg=45,
                 track_geojson=[
-                    [18.70, 72.90], [18.76, 72.96], [18.82, 73.02], [18.88, 73.08],
-                    [18.94, 73.14], [19.00, 73.20]
+                  [14.30, 65.80], [14.45, 66.00], [14.60, 66.18], [14.75, 66.35],
+                  [14.90, 66.50], [15.00, 66.60],
                 ],
                 gap_at=None,
                 last_seen=now - timedelta(minutes=2),
@@ -140,21 +136,21 @@ def seed_demo_data():
             models.Spill(
                 spill_code="SPL-2026-0923-001",
                 detected_at=now - timedelta(hours=2),
-                centroid_lat=19.08,
-                centroid_lon=72.84,
+                centroid_lat=15.48,
+                centroid_lon=65.84,
                 polygon_geojson={
                     "type": "Polygon",
                     "coordinates": [[
-                        [72.72, 19.08], [72.76, 19.12], [72.83, 19.15], [72.90, 19.14],
-                        [72.95, 19.10], [72.96, 19.04], [72.92, 18.99], [72.84, 18.97],
-                        [72.77, 18.99], [72.72, 19.03], [72.72, 19.08]
-                    ]]
+                        [65.72, 15.48], [65.76, 15.52], [65.83, 15.55], [65.90, 15.54],
+                        [65.95, 15.50], [65.96, 15.44], [65.92, 15.39], [65.84, 15.37],
+                        [65.77, 15.39], [65.72, 15.43], [65.72, 15.48],
+                    ]],
                 },
                 drift_geojson=[
-                    [19.04, 72.80], [19.02, 72.92], [18.98, 73.04], [18.92, 73.15], [18.85, 73.24]
+                    [15.48, 65.84], [15.38, 66.02], [15.25, 66.22], [15.10, 66.45], [14.90, 66.70],
                 ],
-                area_km2=18.7,
-                confidence=0.94,
+                area_km2=24.5,
+                confidence=0.96,
                 severity="critical",
                 source_image="S1A_IW_GRDH_20260923T1332",
                 status="active",
@@ -162,20 +158,20 @@ def seed_demo_data():
             models.Spill(
                 spill_code="SPL-2026-0923-002",
                 detected_at=now - timedelta(hours=8),
-                centroid_lat=19.32,
-                centroid_lon=72.61,
+                centroid_lat=16.20,
+                centroid_lon=64.95,
                 polygon_geojson={
                     "type": "Polygon",
                     "coordinates": [[
-                        [72.55, 19.32], [72.58, 19.36], [72.63, 19.38], [72.67, 19.35],
-                        [72.66, 19.30], [72.61, 19.27], [72.56, 19.28], [72.55, 19.32]
-                    ]]
+                        [64.88, 16.20], [64.92, 16.24], [64.97, 16.26], [65.02, 16.23],
+                        [65.01, 16.18], [64.96, 16.15], [64.90, 16.16], [64.88, 16.20],
+                    ]],
                 },
                 drift_geojson=[
-                    [19.32, 72.60], [19.30, 72.70], [19.26, 72.80], [19.20, 72.88]
+                    [16.20, 64.95], [16.10, 65.15], [15.95, 65.40], [15.78, 65.65],
                 ],
-                area_km2=6.3,
-                confidence=0.81,
+                area_km2=8.4,
+                confidence=0.86,
                 severity="high",
                 source_image="S1B_IW_GRDH_20260923T0418",
                 status="active",
@@ -183,20 +179,20 @@ def seed_demo_data():
             models.Spill(
                 spill_code="SPL-2026-0922-007",
                 detected_at=now - timedelta(days=1),
-                centroid_lat=18.78,
-                centroid_lon=73.02,
+                centroid_lat=14.65,
+                centroid_lon=66.40,
                 polygon_geojson={
                     "type": "Polygon",
                     "coordinates": [[
-                        [72.95, 18.78], [72.99, 18.82], [73.05, 18.84], [73.09, 18.80],
-                        [73.08, 18.75], [73.02, 18.72], [72.96, 18.73], [72.95, 18.78]
-                    ]]
+                        [66.32, 14.65], [66.36, 14.69], [66.42, 14.71], [66.47, 14.67],
+                        [66.46, 14.62], [66.40, 14.59], [66.34, 14.60], [66.32, 14.65],
+                    ]],
                 },
                 drift_geojson=[
-                    [18.78, 73.00], [18.74, 73.10], [18.68, 73.18], [18.60, 73.24]
+                    [14.65, 66.40], [14.55, 66.58], [14.42, 66.78], [14.28, 66.98],
                 ],
-                area_km2=11.2,
-                confidence=0.88,
+                area_km2=14.1,
+                confidence=0.91,
                 severity="medium",
                 source_image="S1A_IW_GRDH_20260922T1330",
                 status="resolved",

@@ -46,10 +46,11 @@ def run_detection(req: schemas.SARDetectionRequest, db: Session = Depends(get_db
     return spill
 
 
+@router.get("/{spill_id}/correlate", response_model=list[schemas.AlertOut])
 @router.post("/{spill_id}/correlate", response_model=list[schemas.AlertOut])
 def run_correlation(spill_id: int, db: Session = Depends(get_db)):
     """Run the AIS correlation engine for a spill and persist ranked
-    candidate vessels as Alerts."""
+    candidate vessels as Alerts with multi-factor scoring breakdown."""
     spill = db.query(models.Spill).get(spill_id)
     if not spill:
         raise HTTPException(status_code=404, detail="Spill not found")
@@ -60,9 +61,11 @@ def run_correlation(spill_id: int, db: Session = Depends(get_db)):
             "mmsi": v.mmsi,
             "name": v.name,
             "vessel_type": v.vessel_type,
+            "flag": v.flag,
             "lat": v.lat,
             "lon": v.lon,
             "speed_knots": v.speed_knots,
+            "course_deg": v.course_deg,
             "dark": v.dark,
             "track_geojson": v.track_geojson,
             "gap_at": v.gap_at,
@@ -80,11 +83,12 @@ def run_correlation(spill_id: int, db: Session = Depends(get_db)):
     for r in ranked:
         alert = models.Alert(
             spill_id=spill.id,
-            vessel_mmsi=r["mmsi"],
+            vessel_mmsi=r["vessel_mmsi"] if "vessel_mmsi" in r else r.get("mmsi"),
             suspicion_score=r["suspicion_score"],
             distance_km=r.get("distance_km"),
             time_delta_min=r.get("time_delta_min"),
             reasoning=r["reasoning"],
+            factors=r.get("factors"),
         )
         db.add(alert)
         alerts.append(alert)

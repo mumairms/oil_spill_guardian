@@ -48,6 +48,7 @@ class AlertOut(BaseModel):
     distance_km: Optional[float] = None
     time_delta_min: Optional[int] = None
     reasoning: Optional[str] = None
+    factors: Optional[Dict[str, Any]] = None
     created_at: datetime
 
 
@@ -98,6 +99,7 @@ class NMEADecodeResponse(BaseModel):
 
 
 class AISStreamRequest(BaseModel):
-    bbox: List[List[float]]  # [[[minLat, minLon], [maxLat, maxLon]]]
+    bbox: Any = [[[18.5, 72.5], [19.5, 73.5]]]  # Can be list of floats or coordinates
     api_key: Optional[str] = None
     max_messages: int = 10
+

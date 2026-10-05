@@ -55,5 +55,6 @@ class Alert(Base):
     distance_km = Column(Float, nullable=True)
     time_delta_min = Column(Integer, nullable=True)
     reasoning = Column(String, nullable=True)
+    factors = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
